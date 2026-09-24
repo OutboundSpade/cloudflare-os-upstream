@@ -101,3 +101,36 @@ export class FakeGatekeeperAccount
     return accountCalls.get(this.ctx.props.name) ?? [];
   }
 }
+
+// Actual bundled gadget classes, exposed over native RPC for subscription lifetime tests.
+import { Gadget as DocsGadget } from "../../bundled-blueprints/blueprints/workspace-docs/files/server.ts";
+import { Gadget as SheetsGadget } from "../../bundled-blueprints/blueprints/workspace-sheets/files/server.ts";
+import { Gadget as SlidesGadget } from "../../bundled-blueprints/blueprints/workspace-slides/files/server.ts";
+
+/** Docs with a failing-read switch and lifecycle probes; subscribe() is unmodified. */
+export class TestDocsSubscriptions extends DocsGadget {
+  failRead = false;
+  failSnapshot() { this.failRead = true; }
+  async loadDocument() {
+    if (this.failRead) throw new Error("snapshot unavailable");
+    return super.loadDocument();
+  }
+  subscriberCount() { return this.subscribers.size; }
+  emit() { this.subscribers.broadcast(callback => callback.presence({ type: "leave", clientId: "test" })); }
+}
+/** Sheets with a failing-read switch and lifecycle probes; subscribe() is unmodified. */
+export class TestSheetsSubscriptions extends SheetsGadget {
+  failRead = false;
+  failSnapshot() { this.failRead = true; }
+  async loadMeta() {
+    if (this.failRead) throw new Error("snapshot unavailable");
+    return super.loadMeta();
+  }
+  subscriberCount() { return this.subscribers.size; }
+  emit() { this.subscribers.broadcast(callback => callback.presence({ type: "leave", clientId: "test" })); }
+}
+/** Slides with lifecycle probes; subscribe() is unmodified. */
+export class TestSlidesSubscriptions extends SlidesGadget {
+  subscriberCount() { return this.subscribers.size; }
+  emit() { this.subscribers.broadcast(callback => callback.deckChanged({ slides: [] })); }
+}

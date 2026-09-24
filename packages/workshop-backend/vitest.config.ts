@@ -48,6 +48,9 @@ export default defineConfig({
         // The overseer loads gadget code through this, so a test can run a real gadget facet.
         workerLoaders: { LOADER: {} },
         durableObjects: {
+          TEST_DOCS_SUBSCRIPTIONS: { className: 'TestDocsSubscriptions', useSQLite: true },
+          TEST_SHEETS_SUBSCRIPTIONS: { className: 'TestSheetsSubscriptions', useSQLite: true },
+          TEST_SLIDES_SUBSCRIPTIONS: { className: 'TestSlidesSubscriptions', useSQLite: true },
           TEST_OVERSEER: { className: 'OverseerDurableObject', useSQLite: true },
           TEST_USER: { className: 'UserDurableObject', useSQLite: true },
           TEST_PENDING_LOGIN: { className: 'PendingLogin', useSQLite: true },
