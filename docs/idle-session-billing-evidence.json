@@ -1,0 +1,1303 @@
+{
+  "applicationCommit": "bfe217f5e5ef93748a67bc4f44fa56d8add34de6",
+  "variants": {
+    "a": "Unchanged upstream application",
+    "b": "Upstream plus explicit subscription ownership patch 12f3b253"
+  },
+  "query": {
+    "dataset": "durableObjectsPeriodicGroups",
+    "start": "2026-09-24T04:28:00Z",
+    "endExclusive": "2026-09-24T05:03:00Z",
+    "collectedAt": "2026-09-24T05:04:37Z",
+    "filters": [
+      "namespaceId",
+      "datetime_geq",
+      "datetime_lt"
+    ],
+    "grouping": [
+      "datetimeMinute",
+      "objectId",
+      "coloCode"
+    ],
+    "units": {
+      "duration": "GB-s",
+      "activeTime": "microseconds",
+      "cpuTime": "microseconds"
+    }
+  },
+  "notes": [
+    "Identifiers were replaced with fixture aliases; raw metric values are unchanged.",
+    "Do not infer zero duration from an empty recent query. This export uses settled earlier samples.",
+    "Exclude transition buckets when calculating steady rates; periodic records need not align precisely with UI transitions.",
+    "A frontend-only chat-suspension prototype ran against variant b empty-workspace from 04:52:33 to 04:55:55 UTC. It failed the live suspension check and is excluded from fix recommendations.",
+    "The subscription-only control uses Node RPC clients, so the prototype frontend is not on its execution path.",
+    "The lab Workers were deleted after all test clients finished. Cleanup truncates the observation; no infinite-retention claim is made."
+  ],
+  "browserPhases": [
+    {
+      "state": "no-tabs",
+      "start": "2026-09-24T04:31:14.905Z",
+      "end": "2026-09-24T04:35:14.909Z"
+    },
+    {
+      "state": "empty-workspace",
+      "start": "2026-09-24T04:35:17.347Z",
+      "iframes": {
+        "b": 0,
+        "a": 0
+      },
+      "end": "2026-09-24T04:39:17.352Z"
+    },
+    {
+      "state": "document-open",
+      "start": "2026-09-24T04:39:19.387Z",
+      "iframes": {
+        "b": 1,
+        "a": 1
+      },
+      "end": "2026-09-24T04:43:19.392Z"
+    },
+    {
+      "state": "document-pane-closed",
+      "start": "2026-09-24T04:43:19.504Z",
+      "iframes": {
+        "b": 1,
+        "a": 1
+      },
+      "end": "2026-09-24T04:47:19.509Z"
+    },
+    {
+      "state": "all-tabs-closed",
+      "start": "2026-09-24T04:47:19.518Z",
+      "end": "2026-09-24T04:51:19.617Z"
+    }
+  ],
+  "subscriptionOnlyEvents": [
+    {
+      "event": "subscription.held",
+      "variant": "a",
+      "at": "2026-09-24T04:57:58.094Z",
+      "hasOwner": false
+    },
+    {
+      "event": "subscription.held",
+      "variant": "b",
+      "at": "2026-09-24T04:57:58.943Z",
+      "hasOwner": true
+    },
+    {
+      "event": "transport.closed",
+      "variant": "a",
+      "at": "2026-09-24T04:58:58.108Z"
+    },
+    {
+      "event": "transport.closed",
+      "variant": "b",
+      "at": "2026-09-24T04:58:58.949Z"
+    }
+  ],
+  "capabilityReleaseEvents": [
+    {
+      "event": "capability.held",
+      "at": "2026-09-24T04:58:50.223Z"
+    },
+    {
+      "event": "capability.released",
+      "at": "2026-09-24T05:00:50.232Z",
+      "transportOpen": true
+    },
+    {
+      "event": "release-window.complete",
+      "at": "2026-09-24T05:02:50.238Z",
+      "transportOpen": true
+    },
+    {
+      "event": "transport.closed",
+      "at": "2026-09-24T05:02:50.250Z"
+    }
+  ],
+  "capabilityReleaseNotes": "Worker-only PublicApi.ping every 10 seconds in both windows; no additional Overseer calls. An earlier no-keepalive attempt ended by platform connection shedding and is not used for the release comparison.",
+  "rows": [
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 1,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:29:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 284842,
+        "cpuTime": 22276,
+        "duration": 0.036459776
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 1,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:29:00Z",
+        "fixture": "empty-workspace"
+      },
+      "sum": {
+        "activeTime": 852660,
+        "cpuTime": 8919,
+        "duration": 0.10914048
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 1,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:35:00Z",
+        "fixture": "empty-workspace"
+      },
+      "sum": {
+        "activeTime": 60000003,
+        "cpuTime": 12318,
+        "duration": 7.680000384
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 1,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:36:00Z",
+        "fixture": "empty-workspace"
+      },
+      "sum": {
+        "activeTime": 59257133,
+        "cpuTime": 5830,
+        "duration": 7.584913024
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 1,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:37:00Z",
+        "fixture": "empty-workspace"
+      },
+      "sum": {
+        "activeTime": 60000053,
+        "cpuTime": 0,
+        "duration": 7.680006784
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 1,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:38:00Z",
+        "fixture": "empty-workspace"
+      },
+      "sum": {
+        "activeTime": 58953858,
+        "cpuTime": 4150,
+        "duration": 7.546093824
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:39:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 119999988,
+        "cpuTime": 74053,
+        "duration": 15.359998464
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 1,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:39:00Z",
+        "fixture": "empty-workspace"
+      },
+      "sum": {
+        "activeTime": 615062,
+        "cpuTime": 438,
+        "duration": 0.078727936
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:40:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 120000083,
+        "cpuTime": 8440,
+        "duration": 15.360010624000001
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:41:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 120000076,
+        "cpuTime": 8458,
+        "duration": 15.360009728
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:42:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 120000091,
+        "cpuTime": 9260,
+        "duration": 15.360011648
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:43:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 120000109,
+        "cpuTime": 8993,
+        "duration": 15.360013952
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:44:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 120000080,
+        "cpuTime": 8252,
+        "duration": 15.360010240000001
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:45:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 120000074,
+        "cpuTime": 8199,
+        "duration": 15.360009472
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:46:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 120000128,
+        "cpuTime": 8666,
+        "duration": 15.360016384
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:47:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 120000088,
+        "cpuTime": 1768,
+        "duration": 15.360011264
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:48:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 120000072,
+        "cpuTime": 0,
+        "duration": 15.360009216
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:49:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 120000082,
+        "cpuTime": 0,
+        "duration": 15.360010496000001
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:50:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 120000094,
+        "cpuTime": 0,
+        "duration": 15.360012032
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:51:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 120000091,
+        "cpuTime": 0,
+        "duration": 15.360011648
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:52:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 120000092,
+        "cpuTime": 0,
+        "duration": 15.360011776
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:53:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 120000113,
+        "cpuTime": 0,
+        "duration": 15.360014463999999
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:54:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 120000081,
+        "cpuTime": 0,
+        "duration": 15.360010368000001
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:55:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 120000074,
+        "cpuTime": 0,
+        "duration": 15.360009472
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:56:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 120000066,
+        "cpuTime": 0,
+        "duration": 15.360008448
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 1,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:56:00Z",
+        "fixture": "empty-workspace"
+      },
+      "sum": {
+        "activeTime": 59999992,
+        "cpuTime": 5989,
+        "duration": 7.679998976
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:57:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 120000114,
+        "cpuTime": 0,
+        "duration": 15.360014591999999
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 1,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:57:00Z",
+        "fixture": "empty-workspace"
+      },
+      "sum": {
+        "activeTime": 18765231,
+        "cpuTime": 453,
+        "duration": 2.401949568
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:57:00Z",
+        "fixture": "subscription-only-docs"
+      },
+      "sum": {
+        "activeTime": 120000003,
+        "cpuTime": 52521,
+        "duration": 15.360000384
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:58:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 120000086,
+        "cpuTime": 0,
+        "duration": 15.360011008
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 1,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:58:00Z",
+        "fixture": "empty-workspace"
+      },
+      "sum": {
+        "activeTime": 60000004,
+        "cpuTime": 2762,
+        "duration": 7.680000512
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:58:00Z",
+        "fixture": "subscription-only-docs"
+      },
+      "sum": {
+        "activeTime": 120000103,
+        "cpuTime": 422,
+        "duration": 15.360013184
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:59:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 120000073,
+        "cpuTime": 0,
+        "duration": 15.360009344
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 1,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:59:00Z",
+        "fixture": "empty-workspace"
+      },
+      "sum": {
+        "activeTime": 60000043,
+        "cpuTime": 0,
+        "duration": 7.680005504
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:59:00Z",
+        "fixture": "subscription-only-docs"
+      },
+      "sum": {
+        "activeTime": 120000118,
+        "cpuTime": 0,
+        "duration": 15.360015103999999
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T05:00:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 120000074,
+        "cpuTime": 0,
+        "duration": 15.360009472
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 1,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T05:00:00Z",
+        "fixture": "empty-workspace"
+      },
+      "sum": {
+        "activeTime": 28032,
+        "cpuTime": 118,
+        "duration": 0.003588096
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T05:00:00Z",
+        "fixture": "subscription-only-docs"
+      },
+      "sum": {
+        "activeTime": 120000151,
+        "cpuTime": 0,
+        "duration": 15.360019328
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T05:01:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 120000100,
+        "cpuTime": 0,
+        "duration": 15.3600128
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T05:01:00Z",
+        "fixture": "subscription-only-docs"
+      },
+      "sum": {
+        "activeTime": 120000085,
+        "cpuTime": 0,
+        "duration": 15.36001088
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T05:02:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 120000109,
+        "cpuTime": 0,
+        "duration": 15.360013952
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T05:02:00Z",
+        "fixture": "subscription-only-docs"
+      },
+      "sum": {
+        "activeTime": 120000098,
+        "cpuTime": 0,
+        "duration": 15.360012544
+      },
+      "variant": "a"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 1,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:30:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 299075,
+        "cpuTime": 26862,
+        "duration": 0.0382816
+      },
+      "variant": "b"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 1,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:30:00Z",
+        "fixture": "empty-workspace"
+      },
+      "sum": {
+        "activeTime": 849236,
+        "cpuTime": 17141,
+        "duration": 0.108702208
+      },
+      "variant": "b"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 1,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:35:00Z",
+        "fixture": "empty-workspace"
+      },
+      "sum": {
+        "activeTime": 59673644,
+        "cpuTime": 26434,
+        "duration": 7.638226432
+      },
+      "variant": "b"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 1,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:36:00Z",
+        "fixture": "empty-workspace"
+      },
+      "sum": {
+        "activeTime": 60000056,
+        "cpuTime": 0,
+        "duration": 7.680007168
+      },
+      "variant": "b"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 1,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:37:00Z",
+        "fixture": "empty-workspace"
+      },
+      "sum": {
+        "activeTime": 59411488,
+        "cpuTime": 5445,
+        "duration": 7.604670464
+      },
+      "variant": "b"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 1,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:38:00Z",
+        "fixture": "empty-workspace"
+      },
+      "sum": {
+        "activeTime": 60000061,
+        "cpuTime": 0,
+        "duration": 7.680007808
+      },
+      "variant": "b"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:39:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 120000035,
+        "cpuTime": 65311,
+        "duration": 15.36000448
+      },
+      "variant": "b"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 1,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:39:00Z",
+        "fixture": "empty-workspace"
+      },
+      "sum": {
+        "activeTime": 622197,
+        "cpuTime": 673,
+        "duration": 0.079641216
+      },
+      "variant": "b"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:40:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 120000065,
+        "cpuTime": 8185,
+        "duration": 15.36000832
+      },
+      "variant": "b"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:41:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 120000094,
+        "cpuTime": 8784,
+        "duration": 15.360012032
+      },
+      "variant": "b"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:42:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 120000097,
+        "cpuTime": 8955,
+        "duration": 15.360012416
+      },
+      "variant": "b"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:43:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 120000101,
+        "cpuTime": 8597,
+        "duration": 15.360012928
+      },
+      "variant": "b"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:44:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 120000093,
+        "cpuTime": 8792,
+        "duration": 15.360011904
+      },
+      "variant": "b"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:45:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 120000131,
+        "cpuTime": 8605,
+        "duration": 15.360016768
+      },
+      "variant": "b"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:46:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 120000092,
+        "cpuTime": 8584,
+        "duration": 15.360011776
+      },
+      "variant": "b"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:47:00Z",
+        "fixture": "browser-docs"
+      },
+      "sum": {
+        "activeTime": 1583058,
+        "cpuTime": 1731,
+        "duration": 0.202631424
+      },
+      "variant": "b"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 1,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:52:00Z",
+        "fixture": "empty-workspace"
+      },
+      "sum": {
+        "activeTime": 60000001,
+        "cpuTime": 16062,
+        "duration": 7.680000128
+      },
+      "variant": "b"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 1,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:53:00Z",
+        "fixture": "empty-workspace"
+      },
+      "sum": {
+        "activeTime": 60000050,
+        "cpuTime": 0,
+        "duration": 7.6800064
+      },
+      "variant": "b"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 1,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:54:00Z",
+        "fixture": "empty-workspace"
+      },
+      "sum": {
+        "activeTime": 60000079,
+        "cpuTime": 0,
+        "duration": 7.680010112
+      },
+      "variant": "b"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 1,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:55:00Z",
+        "fixture": "empty-workspace"
+      },
+      "sum": {
+        "activeTime": 20340387,
+        "cpuTime": 1565,
+        "duration": 2.603569536
+      },
+      "variant": "b"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:57:00Z",
+        "fixture": "subscription-only-docs"
+      },
+      "sum": {
+        "activeTime": 120000012,
+        "cpuTime": 55938,
+        "duration": 15.360001536
+      },
+      "variant": "b"
+    },
+    {
+      "avg": {
+        "sampleInterval": 1
+      },
+      "count": 2,
+      "dimensions": {
+        "coloCode": "IAD",
+        "datetimeMinute": "2026-09-24T04:58:00Z",
+        "fixture": "subscription-only-docs"
+      },
+      "sum": {
+        "activeTime": 360543,
+        "cpuTime": 1113,
+        "duration": 0.046149504
+      },
+      "variant": "b"
+    }
+  ],
+  "nativeOpenInvocations": [
+    {
+      "variant": "a",
+      "start": "2026-09-24T04:35:16.807000+00:00",
+      "wallTimeMs": 103403,
+      "cpuTimeMs": 13,
+      "outcome": "canceled"
+    },
+    {
+      "variant": "a",
+      "start": "2026-09-24T04:37:00.952000+00:00",
+      "wallTimeMs": 127921,
+      "cpuTimeMs": 5,
+      "outcome": "canceled"
+    },
+    {
+      "variant": "a",
+      "start": "2026-09-24T04:39:09.919000+00:00",
+      "wallTimeMs": 7501,
+      "cpuTimeMs": 4,
+      "outcome": "canceled"
+    },
+    {
+      "variant": "a",
+      "start": "2026-09-24T04:56:46.692000+00:00",
+      "wallTimeMs": 78765,
+      "cpuTimeMs": 6,
+      "outcome": "canceled"
+    },
+    {
+      "variant": "a",
+      "start": "2026-09-24T04:57:57.733000+00:00",
+      "wallTimeMs": 60373,
+      "cpuTimeMs": 7,
+      "outcome": "canceled"
+    },
+    {
+      "variant": "a",
+      "start": "2026-09-24T04:58:50.205000+00:00",
+      "wallTimeMs": 120028,
+      "cpuTimeMs": 2,
+      "outcome": "ok"
+    },
+    {
+      "variant": "a",
+      "start": "2026-09-24T04:39:18.816000+00:00",
+      "wallTimeMs": 480704,
+      "cpuTimeMs": 62,
+      "outcome": "canceled"
+    },
+    {
+      "variant": "b",
+      "start": "2026-09-24T04:35:16.816000+00:00",
+      "wallTimeMs": 29612,
+      "cpuTimeMs": 21,
+      "outcome": "canceled"
+    },
+    {
+      "variant": "b",
+      "start": "2026-09-24T04:35:46.754000+00:00",
+      "wallTimeMs": 136085,
+      "cpuTimeMs": 5,
+      "outcome": "canceled"
+    },
+    {
+      "variant": "b",
+      "start": "2026-09-24T04:38:03.431000+00:00",
+      "wallTimeMs": 74005,
+      "cpuTimeMs": 5,
+      "outcome": "canceled"
+    },
+    {
+      "variant": "b",
+      "start": "2026-09-24T04:39:18.534000+00:00",
+      "wallTimeMs": 480986,
+      "cpuTimeMs": 53,
+      "outcome": "canceled"
+    },
+    {
+      "variant": "b",
+      "start": "2026-09-24T04:52:34.825000+00:00",
+      "wallTimeMs": 200337,
+      "cpuTimeMs": 17,
+      "outcome": "canceled"
+    },
+    {
+      "variant": "b",
+      "start": "2026-09-24T04:57:58.616000+00:00",
+      "wallTimeMs": 60334,
+      "cpuTimeMs": 5,
+      "outcome": "canceled"
+    }
+  ]
+}
