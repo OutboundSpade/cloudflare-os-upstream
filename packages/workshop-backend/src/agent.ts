@@ -785,36 +785,44 @@ Note that Cap'n Web is a bidirectional object capability protocol, meaning, amon
 
 Using functions this way is a great way to implement real-time updates. The client can "subscribe" to updates, passing a callback function to the server. The server can then call the function asynchronously whenever the state changes (perhaps due to activity of a different client). This technique should be used when implementing multiplayer collaboration.
 
-When implementing such a subscription, it is important to call \`.dup()\` on the callback stub, in order to obtain a long-lived stub. Otherwise, the stub received as a parameter is implicitly disposed at the end of the function. You should also use \`onRpcBroken\` to monitor for client disconnects, like:
+When implementing such a subscription, call \`.dup()\` to retain the callback past the current call. Gadget servers use native Workers RPC: \`onRpcBroken\` is a Cap'n Web API and is NOT available on these native stubs. Return a native \`RpcTarget\` subscription whose disposer removes and disposes the retained callback:
 
 \`\`\`
-async subscribe(callback) {
-  let callbackDup = callback.dup();
-  this.subscribers.add(callbackDup);
-  callbackDup.onRpcBroken(error => {
-    this.subscribers.delete(callbackDup);
-  });
+subscribe(callback) {
+  const callbackDup = callback.dup();
+  const subscribers = this.subscribers;
+  subscribers.add(callbackDup);
+  return new class extends RpcTarget {
+    [Symbol.dispose]() {
+      if (subscribers.delete(callbackDup)) callbackDup[Symbol.dispose]();
+    }
+  }();
 }
 \`\`\`
 
-And on the client:
+Finish any fallible asynchronous setup before retaining the callback. Broadcast failures must also remove and dispose the failed callback, without failing delivery to other subscribers.
+
+On the client, retain the returned subscription and release it on view teardown. Handle setup completing after teardown too:
 
 \`\`\`
+let closed = false;
+let subscription;
+window.addEventListener("pagehide", () => {
+  closed = true;
+  subscription?.[Symbol.dispose]();
+  subscription = undefined;
+}, { once: true });
 class Callback extends RpcTarget {
   update(state) {
     // update the UI
   }
-
-  [Symbol.dispose]() {
-    // Connection lost. Resubscribe using new connection.
-    gadget.subscribe(this);
-  }
 }
-
-gadget.subscribe(new Callback());
+const result = await gadget.subscribe(new Callback());
+if (closed) result[Symbol.dispose]();
+else subscription = result;
 \`\`\`
 
-The top-level \`gadget\` stub survives backend reconnects, and calls made while its replacement is being acquired will wait. However, other capabilities passed over RPC in either direction are disposed on disconnect, and must be re-acquired.
+The top-level \`gadget\` stub survives backend reconnects, but other capabilities passed over RPC must be re-acquired. If implementing automatic resubscription, allow only one pending attempt, use bounded retries with backoff, and stop when the view closes. Do not unconditionally resubscribe from a callback's disposer: disposal also happens during intentional teardown or failed setup.
 
 DO NOT import \`RpcTarget\` in client.js. It is already imported.
 
