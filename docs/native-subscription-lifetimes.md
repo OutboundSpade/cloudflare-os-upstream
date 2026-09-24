@@ -126,7 +126,8 @@ from this defect. Failed broadcast delivery can also remove a retained subscribe
 A full browser reconnect/back-forward-cache exercise remains outside this test.
 Existing persisted gadgets require their own source updates when adopting a fix.
 
-The concise proposed issue is in [native-subscription-issue-draft.md](native-subscription-issue-draft.md).
-No issue or PR has been filed upstream. The current complete implementation exceeds
+The finalized issue is [cloudflare/cloudflare-os#561](https://github.com/cloudflare/cloudflare-os/issues/561);
+its text is preserved in [native-subscription-issue-draft.md](native-subscription-issue-draft.md).
+No PR has been submitted. The current complete implementation exceeds
 upstream's [contribution size guideline](../CONTRIBUTING.md); a bug report with this
 reproduction lets maintainers choose the implementation and review scope.
