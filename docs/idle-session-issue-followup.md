@@ -1,19 +1,17 @@
-Reproduced on clean `bfe217f5` with two isolated deployments: unchanged upstream, and the same code with only the subscription ownership fix for #561. No gatekeepers, active agents, or scheduled jobs were configured.
+I reproduced the idle billing behavior on upstream `bfe217f5` in an isolated deployment with no gatekeepers, active agents, or scheduled jobs.
 
-Overseer duration in the paired browser controls:
+The clearest control was an empty workspace: holding its returned capability accrued approximately **7.68 GB-s/min**. Disposing only that capability stopped the continuous duration, while the same WebSocket remained connected for another two minutes. There was a small teardown sample (0.0036 GB-s), then no further duration recorded during that window. This supports the issue's explanation that retaining the workspace capability keeps the RPC session billable.
 
-| State | Upstream | Subscription fix only |
-| --- | ---: | ---: |
-| Empty workspace, idle | ~7.68 GB-s/min | ~7.68 GB-s/min |
-| Bundled Docs open, idle | ~15.36 GB-s/min | ~15.36 GB-s/min |
-| Close gadget pane, keep workspace open | ~15.36 GB-s/min | ~15.36 GB-s/min |
+Browser measurements also showed:
 
-After closing all browser contexts, the unmodified Docs workspace accumulated another **230.40 GB-s across fifteen full-duration samples, with zero recorded CPU**. The patched workspace's native `open` invocation ended at browser closure and its duration stopped. A second control—subscribe once from Node, then disconnect, with no iframe or heartbeat—reproduced the difference on fresh documents. These are bounded observations, not a claim of an infinite leak.
+| State | Overseer duration |
+| --- | ---: |
+| Empty workspace, idle | ~7.68 GB-s/min |
+| Bundled Docs open, idle | ~15.36 GB-s/min |
+| Close gadget pane, keep workspace open | ~15.36 GB-s/min |
 
-These results separate ordinary retained-session duration from failed cleanup after disconnect. Fixing #561 helped teardown, but did not remove the idle cost of a workspace that remains open.
+One detail matters for the proposed idle suspension: "Close gadget pane" leaves the iframe mounted, and Docs continues its presence heartbeat every four seconds. A policy waiting for five seconds of network silence would therefore never suspend that session. Suspension needs to account for gadget activity and preserve unsaved state, as well as ongoing agent work.
 
-An empty-workspace control additionally dropped from 7.68 GB-s/min to no further duration after releasing only the workspace capability, while keeping the same WebSocket connected for another two minutes.
+A separate cleanup problem is tracked in #561. After browser closure, unmodified Docs accumulated another 230.40 GB-s over fifteen samples with zero recorded CPU. A paired deployment with the subscription ownership fix stopped accumulating duration after teardown, but retained the same idle rates while connected. Fixing that cleanup problem alone does not resolve this issue.
 
-There is also a frontend detail relevant to an idle mitigation: “Close gadget pane” leaves its iframe mounted, and Docs' presence heartbeat continues every four seconds. Waiting for five seconds of network silence would never suspend that session. Unmounting the iframe indiscriminately can lose local state; retaining it while disconnected can queue periodic calls. Gadget flush/pause/resubscribe behavior therefore needs to be part of the lifecycle design, alongside guards for agents, authorization, sends, uploads, and unsaved edits.
-
-[Reproduction, source links, and measurement protocol](https://github.com/OutboundSpade/cloudflare-os-upstream/blob/docs/idle-session-billing/docs/idle-session-billing.md). Given the contribution guidelines, I suggest agreeing on that lifecycle boundary before proposing a broad frontend patch.
+[Reproduction scripts, measurements, and source references](https://github.com/OutboundSpade/cloudflare-os-upstream/blob/docs/idle-session-billing/docs/idle-session-billing.md). Would maintainers prefer guarded idle suspension as an initial mitigation, or a change to the long-lived capability design? These measurements support releasing idle capabilities; they do not establish a validated suspension implementation.
