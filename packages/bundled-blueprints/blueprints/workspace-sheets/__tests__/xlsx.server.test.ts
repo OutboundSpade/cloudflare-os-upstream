@@ -144,7 +144,6 @@ function stub<T extends object>(callbacks: T) {
   return {
     ...callbacks,
     dup() { return this; },
-    onRpcBroken() {},
     [Symbol.dispose]: vi.fn(),
   };
 }
@@ -735,7 +734,7 @@ describe("Workspace Sheets document snapshots", () => {
 
   it("registers a subscriber and takes its snapshot inside the mutation queue", async () => {
     const fixture = inMemoryGadget();
-    const newcomer = {presence: vi.fn(), operation: vi.fn(), onRpcBroken: vi.fn()};
+    const newcomer = {presence: vi.fn(), operation: vi.fn()};
     const {promise: writeReleased, resolve: releaseWrite} = Promise.withResolvers<void>();
     const original = fixture.applyOperationLocked.bind(fixture);
     fixture.applyOperationLocked = async (operation: Operation) => { await writeReleased; return original(operation); };

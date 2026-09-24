@@ -36,3 +36,4 @@ export {
 } from "./src/save-scheduler.ts";
 export { createSubscriber, type SyncHost } from "./src/subscriber.ts";
 export { normalizeBaseVersion } from "./src/versioned.ts";
+export { SubscriptionOwner } from "./src/subscription-owner.ts";

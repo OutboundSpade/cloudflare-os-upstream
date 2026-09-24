@@ -162,7 +162,7 @@ export interface GadgetStub {
   initializeBlocks(args: DocumentInit): Promise<StoredDocument>;
   setDocument(args: DocumentInit): Promise<StoredDocument>;
   applyOperation(operation: Operation): Promise<ApplyOperationResult>;
-  subscribe(callback: SubscriberCallbacks, client?: Partial<Collaborator>): Promise<DocumentSnapshot>;
+  subscribe(callback: SubscriberCallbacks, client?: Partial<Collaborator>): Promise<DocumentSnapshot & { subscription: Disposable }>;
   updatePresence(presence: PresenceUpdate): Promise<void>;
   leavePresence(clientId: string): Promise<void>;
   getGoogleDocInfo(): Promise<GoogleDocInfo | null>;

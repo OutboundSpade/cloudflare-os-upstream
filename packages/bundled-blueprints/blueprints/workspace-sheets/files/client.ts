@@ -1,3 +1,4 @@
+import { SubscriptionOwner } from "@gadgets/bundled-blueprints/libraries/sync/client";
 // ---------------------------------------------------------------------------
 // Sheets — a spreadsheet with a formula engine, built over the shared gadget
 // libraries, imported by this package's name: `ui` draws the chrome and `sync`
@@ -2483,7 +2484,10 @@ function applyPresence(event: SheetsPresenceEvent): void {
 }
 gridScroll.addEventListener("scroll", () => { renderPresence(); });
 presence.startHeartbeat(() => { if (roster.expire()) { renderPresence(); renderPeers(); } });
-window.addEventListener("pagehide", () => { gadget.leavePresence(clientId).catch(() => {}); });
+const liveSubscription = new SubscriptionOwner();
+window.addEventListener("pagehide", () => {
+  liveSubscription[Symbol.dispose]();
+});
 
 // ===========================================================================
 // Remote operations
@@ -2542,6 +2546,7 @@ const subscriber = createSubscriber(RpcTarget, {
 
   try {
     const doc = await gadget.subscribe(subscriber, me);
+    liveSubscription.set(doc.subscription);
     applySnapshot(doc);
     saveStatus.set("saved", "Saved");
     updateUndoButtons();

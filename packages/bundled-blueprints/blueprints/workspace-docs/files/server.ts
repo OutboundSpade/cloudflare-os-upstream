@@ -2,10 +2,11 @@
 // queue, the subscribed browsers, and the per-block optimistic concurrency --
 // is the sync library's; the block model, the ordering rule, the legacy
 // conversion and the Markdown export are this gadget's own.
-import { DurableObject, WorkerEntrypoint } from "cloudflare:workers";
+import { DurableObject, RpcTarget, WorkerEntrypoint } from "cloudflare:workers";
 import {
   type Collaborator,
   MutationQueue,
+  createSubscription,
   SubscriberRegistry,
   type VersionConflict,
   applyVersioned,
@@ -243,11 +244,12 @@ export class Gadget extends DurableObject<GadgetEnv, unknown> implements GadgetS
     };
   }
 
-  async subscribe(callback: SubscriberCallbacks, client: Partial<Collaborator> = {}): Promise<DocumentSnapshot> {
-    // The registry keeps the stub, seeds the newcomer with everyone already
-    // connected, announces it to them, and drops it when its connection breaks.
-    this.subscribers.add(callback, normalizeCollaborator(client));
-    return this.loadDocument();
+  async subscribe(callback: SubscriberCallbacks, client: Partial<Collaborator> = {}): Promise<DocumentSnapshot & { subscription: Disposable }> {
+    return this.mutations.run(async () => {
+      const document = await this.loadDocument();
+      const stub = this.subscribers.add(callback, normalizeCollaborator(client));
+      return { ...document, subscription: createSubscription(RpcTarget, () => { this.subscribers.remove(stub); }) };
+    });
   }
 
   async updatePresence(presence: PresenceUpdate): Promise<void> {

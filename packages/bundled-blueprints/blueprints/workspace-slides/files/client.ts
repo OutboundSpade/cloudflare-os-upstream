@@ -1,3 +1,4 @@
+import { SubscriptionOwner } from "@gadgets/bundled-blueprints/libraries/sync/client";
 /* =========================================================================
  *  Gadgets Slide Builder
  *  -----------------------------------------------------------------------
@@ -4082,10 +4083,15 @@ const subscriber = () => createSubscriber<DeckCallbacks>(RpcTarget, {
 /* ====================== Boot ============================================= */
 
 
+  const liveSubscription = new SubscriptionOwner();
+  window.addEventListener("pagehide", () => liveSubscription[Symbol.dispose](), { once: true });
   try {
     deck = (await gadget.getDeck()) || { slides: [] };
   } catch (e) { deck = { slides: [] }; }
-  try { await gadget.subscribe(subscriber()); } catch (e) {}
+  try {
+    const { subscription } = await gadget.subscribe(subscriber());
+    liveSubscription.set(subscription);
+  } catch (e) {}
   mountShell();
   updateCounter();
   render();

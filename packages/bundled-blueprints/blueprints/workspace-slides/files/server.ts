@@ -1,5 +1,5 @@
-import { DurableObject, WorkerEntrypoint } from "cloudflare:workers";
-import { SubscriberRegistry } from "@gadgets/bundled-blueprints/libraries/sync/server";
+import { DurableObject, RpcTarget, WorkerEntrypoint } from "cloudflare:workers";
+import { SubscriberRegistry, createSubscription } from "@gadgets/bundled-blueprints/libraries/sync/server";
 import type {
   Block,
   BlockInput,
@@ -227,8 +227,9 @@ export class Gadget extends DurableObject<unknown> implements GadgetStub {
   }
 
   // -------- realtime ------------------------------------------------------
-  async subscribe(cb: DeckCallbacks): Promise<void> {
-    this.subscribers.add(cb);
+  async subscribe(cb: DeckCallbacks): Promise<{ subscription: Disposable }> {
+    const stub = this.subscribers.add(cb);
+    return { subscription: createSubscription(RpcTarget, () => { this.subscribers.remove(stub); }) };
   }
 
   async #save(deck: Deck): Promise<void> {

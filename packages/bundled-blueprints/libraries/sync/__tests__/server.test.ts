@@ -58,7 +58,6 @@ function fakeStub() {
     async operation(event: unknown) { received.push(event); },
     async presence(event: unknown) { received.push(event); },
     dup() { return this; },
-    onRpcBroken() {},
     [Symbol.dispose]() {},
   };
   return stub as typeof stub & Callbacks & SubscriberStub;

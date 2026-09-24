@@ -195,7 +195,7 @@ export interface SubscriberCallbacks {
 export interface GadgetStub {
   getDocument(): Promise<SheetsDocument>;
   applyOperation(operation: Operation): Promise<OperationResult>;
-  subscribe(callback: SubscriberCallbacks, client?: CollaboratorInfo): Promise<SheetsDocument>;
+  subscribe(callback: SubscriberCallbacks, client?: CollaboratorInfo): Promise<SheetsDocument & { subscription: Disposable }>;
   updatePresence(presence: PresenceUpdate): Promise<void>;
   leavePresence(clientId: string): Promise<void>;
 }

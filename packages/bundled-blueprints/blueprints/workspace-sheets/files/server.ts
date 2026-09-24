@@ -1,5 +1,5 @@
-import { DurableObject, WorkerEntrypoint } from "cloudflare:workers";
-import { MutationQueue, SubscriberRegistry } from "@gadgets/bundled-blueprints/libraries/sync/server";
+import { DurableObject, RpcTarget, WorkerEntrypoint } from "cloudflare:workers";
+import { MutationQueue, SubscriberRegistry, createSubscription } from "@gadgets/bundled-blueprints/libraries/sync/server";
 import { workbookToXlsx } from "./lib/xlsx.ts";
 import type {
   Cell,
@@ -244,7 +244,7 @@ export class Gadget extends DurableObject<unknown, unknown> {
   }
 
   // --- Presence & subscription ------------------------------------------
-  async subscribe(callback: SubscriberCallbacks, client: Partial<CollaboratorInfo> = {}): Promise<SheetsDocument> {
+  async subscribe(callback: SubscriberCallbacks, client: Partial<CollaboratorInfo> = {}): Promise<SheetsDocument & { subscription: Disposable }> {
     const info: CollaboratorInfo = {
       clientId: String(client.clientId || ""),
       name: String(client.name || "Guest").slice(0, 40),
@@ -257,8 +257,8 @@ export class Gadget extends DurableObject<unknown, unknown> {
     // everyone here and announces it, once add() has returned.
     return this.mutations.run(async () => {
       const document = await this.assembleDocument(await this.loadMeta());
-      this.subscribers.add(callback, info);
-      return document;
+      const stub = this.subscribers.add(callback, info);
+      return { ...document, subscription: createSubscription(RpcTarget, () => { this.subscribers.remove(stub); }) };
     });
   }
 

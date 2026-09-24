@@ -1,3 +1,5 @@
+import { SubscriptionOwner } from "@gadgets/bundled-blueprints/libraries/sync/client";
+import type { DocumentSnapshot } from "./lib/protocol.ts";
 // ---------------------------------------------------------------------------
 // Docs — a Google-Docs-style editor. Builds the entire UI in JS.
 //
@@ -1573,14 +1575,14 @@ document.addEventListener("selectionchange", () => {
 window.addEventListener("scroll", () => { if (roster.entries().length) renderPresence(); }, true);
 window.addEventListener("resize", () => { if (roster.entries().length) renderPresence(); });
 
-// onRpcBroken and unload delivery can both be delayed by the browser. A small
+// Disconnect detection can be delayed by the browser. A small
 // heartbeat makes stationary cursors live, while stale collaborators disappear
 // predictably even when a tab/process is killed without a clean disconnect.
 presence.startHeartbeat(() => { if (roster.expire()) renderPresence(); });
 
+const liveSubscription = new SubscriptionOwner();
 window.addEventListener("pagehide", () => {
-  // This is best-effort only; stale expiry above is the guaranteed fallback.
-  gadget.leavePresence(clientId).catch(() => {});
+  liveSubscription[Symbol.dispose]();
 });
 
 // The server's callbacks, on the RpcTarget the bootstrap provides.
@@ -1602,7 +1604,9 @@ if (isDocumentExport) {
 // --- Init ------------------------------------------------------------------
 
   try {
-    let doc = await gadget.subscribe(subscriber, { clientId, name: me.name, color: me.color });
+    const initial = await gadget.subscribe(subscriber, { clientId, name: me.name, color: me.color });
+    liveSubscription.set(initial.subscription);
+    let doc: DocumentSnapshot = initial;
     if (!doc.blocks) {
       // One-time, backwards-compatible conversion of the former HTML snapshot.
       editor.innerHTML = doc.legacyContent || "";

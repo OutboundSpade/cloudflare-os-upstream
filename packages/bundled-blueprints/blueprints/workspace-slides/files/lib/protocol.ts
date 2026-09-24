@@ -130,5 +130,5 @@ export interface GadgetStub {
   reorderBlock(slideId: string, blockId: string, toIndex: number): Promise<void>;
   setDeck(deck: Deck): Promise<void>;
   resetAll(): Promise<Deck>;
-  subscribe(cb: DeckCallbacks): Promise<void>;
+  subscribe(cb: DeckCallbacks): Promise<{ subscription: Disposable }>;
 }

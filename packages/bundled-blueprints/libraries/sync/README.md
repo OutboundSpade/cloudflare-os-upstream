@@ -13,7 +13,9 @@ formats on top of it.
 - **`MutationQueue`** -- `run(work)` chains mutations so that each loads the state the previous
   one stored, whatever order their RPCs interleave in; a rejection reaches its caller alone.
 - **`SubscriberRegistry<Callbacks, Info>`** -- `add(subscriber, info)` `dup()`s the stub the RPC
-  layer delivered, registers `onRpcBroken` cleanup and returns the kept handle; `broadcast(send)`
+  layer delivered and returns the kept handle; its returned subscription owner must call
+  `remove(handle)` when the client releases it. Native Workers RPC has no `onRpcBroken` hook.
+  `broadcast(send)`
   delivers to everyone at once and never waits: a failing subscriber is dropped and disposed
   (never failing the mutation), a hung one holds up nothing but itself, and a callback may call back
   into the object -- read the document, queue a mutation -- without deadlocking on the mutation that
@@ -23,6 +25,7 @@ formats on top of it.
   callback vocabulary -- it seeds a newcomer with everyone already here (all at once; one that
   fails a seed is dropped, and its leave announced, since it was a member from the moment it was
   added), announces the newcomer to all, and announces whoever drops out. A gadget with no presence passes none and gets a fan-out.
+- **`createSubscription(RpcTarget, cleanup)`** -- a native RPC target whose disposer runs cleanup once.
 - **`applyVersioned(items, batch, options?)`** -- the per-item concurrency rule over any
   `{ id, version }`: an upsert whose `baseVersion` is stale is rejected with the authoritative
   item, one for a deleted item is rejected as `missing` (the client may re-create it with
@@ -34,8 +37,10 @@ formats on top of it.
 - **`normalizeCollaborator`** bounds what a client says about itself before it is repeated.
 
 The entry imports nothing from `cloudflare:workers`: the stubs are whatever the gadget's own
-`subscribe` receives, seen through the structural `SubscriberStub` (`dup`, `onRpcBroken`, the
-disposer).
+`subscribe` receives, seen through the structural `SubscriberStub` (`dup` and the disposer). Pass the gadget's native `RpcTarget`
+class to `createSubscription` to return an owner that removes the retained
+callback. Snapshot before retaining it (inside the mutation queue where necessary), so failed
+setup cannot leave a subscriber behind.
 
 ## Client (`@gadgets/bundled-blueprints/libraries/sync/client`)
 
@@ -58,6 +63,8 @@ disposer).
   prototype carries each callback, since the RPC layer exposes prototype methods and never own
   properties. The class comes from the gadget's bootstrap, which a library cannot import, so the
   gadget passes it in the way it passes its `gadget` stub.
+- **`SubscriptionOwner`** -- retains the returned subscription for a view, disposes its predecessor
+  on replacement, and releases late setup results after the view closes. Dispose it on teardown.
 - **`collaboratorFor(clientId)`** -- the guest identity a tab declares for itself.
 
 Nothing on the client side touches the DOM; every module runs in Node under its tests.

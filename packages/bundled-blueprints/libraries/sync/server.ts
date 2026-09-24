@@ -9,8 +9,8 @@
  * - {@link applyVersioned} is the per-item optimistic-concurrency rule: an edit based on a stale
  *   version is rejected with the authoritative item, so the client can rebase rather than lose it.
  *
- * The entry imports nothing from the runtime: a registry's stubs are whatever the RPC layer
- * delivers to the gadget's `subscribe`, seen through {@link SubscriberStub}.
+ * The registry owns duplicated native RPC callbacks; {@link createSubscription} gives the caller
+ * an explicit handle whose disposal removes them, including on transport teardown.
  */
 
 export { type Collaborator, normalizeCollaborator } from "./src/collaborator.ts";
@@ -30,3 +30,5 @@ export {
   type VersionedOutcome,
   type VersionedUpsert,
 } from "./src/versioned.ts";
+
+export { createSubscription } from "./src/subscription.ts";

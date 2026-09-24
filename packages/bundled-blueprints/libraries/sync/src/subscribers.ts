@@ -3,8 +3,8 @@
  *
  * A subscriber arrives as the client's `RpcTarget`, seen from here through a Workers RPC stub that
  * is only valid for the call that delivered it. Keeping it means `dup()`-ing it, and dropping it
- * means disposing that copy; the runtime's `onRpcBroken` says when the connection behind it went
- * away. Delivery isolates subscribers from each other and from the object: a broadcast is issued to
+ * means disposing that copy; the owning subscription handle removes it when the caller
+ * releases its session. Delivery isolates subscribers from each other and from the object: a broadcast is issued to
  * everyone at once and never awaited, so one whose call fails is dropped rather than failing the
  * mutation that was being broadcast (and the rest are told it left, exactly as they would be had
  * its connection closed), one that never answers holds up nothing but itself, and a callback may
@@ -21,13 +21,11 @@
 
 /**
  * What the RPC layer adds to a subscriber's callbacks: the `dup` that keeps it past the call that
- * delivered it, the disposer that releases it, and the disconnection hook.
+ * delivered it, the disposer that releases it.
  */
 export interface SubscriberStub {
   /** A copy that survives the end of the RPC call this stub arrived in. */
   dup(): this;
-  /** Runs once when the connection behind this stub is gone. */
-  onRpcBroken(handler: (error: unknown) => void): void;
   /** Releases this stub. */
   [Symbol.dispose](): void;
 }
@@ -73,7 +71,7 @@ export class SubscriberRegistry<Callbacks extends object, Info = void> {
 
   /**
    * Keep `subscriber` -- the stub the RPC layer delivered, typed as the client implements it --
-   * until its connection breaks or it fails a delivery, and announce its presence when hooks are
+   * until its owner removes it or it fails a delivery, and announce its presence when hooks are
    * set: it is seeded with everyone already here, all at once, and then announced to everyone,
    * in a microtask once this call has returned, so the caller's own work comes first -- though a
    * reply the caller still awaits something for may follow the seeds. A newcomer that
@@ -86,14 +84,11 @@ export class SubscriberRegistry<Callbacks extends object, Info = void> {
     const stub = (subscriber as Callbacks & SubscriberStub).dup();
     const others = this.members();
     this.#subscribers.set(stub, who);
-    stub.onRpcBroken(() => {
-      if (this.#drop(stub)) this.#announceLeave(who);
-    });
     const presence = this.#presence;
     if (presence) {
       queueMicrotask(async () => {
-        // A newcomer gone already -- removed or broken since it was added -- was announced as it
-        // went (see remove and the broken handler), and is seeded and announced no further.
+        // A newcomer gone already -- removed since it was added -- was announced as it
+        // went (see remove), and is seeded and announced no further.
         if (!this.#subscribers.has(stub)) return;
         const seeds = await Promise.allSettled(others.map((person) => Promise.resolve().then(() => presence.join(stub, person))));
         // One that fails a seed is dropped the same way a failed delivery drops it. Its join was

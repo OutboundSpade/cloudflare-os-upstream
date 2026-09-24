@@ -14,12 +14,10 @@ interface Who {
 
 /**
  * A subscriber as the RPC layer would deliver it: the callbacks record what they were told, `dup`
- * hands back the same object (marking that it was kept), and the broken-connection handler can be
- * fired by the test.
+ * hands back the same object (marking that it was kept), and disposal is counted.
  */
 function fakeStub(failOn: (event: unknown) => boolean = () => false) {
   const received: unknown[] = [];
-  let broken: ((error: unknown) => void) | null = null;
   const stub = {
     dups: 0,
     disposed: 0,
@@ -36,14 +34,8 @@ function fakeStub(failOn: (event: unknown) => boolean = () => false) {
       this.dups++;
       return this;
     },
-    onRpcBroken(handler: (error: unknown) => void) {
-      broken = handler;
-    },
     [Symbol.dispose]() {
       this.disposed++;
-    },
-    break() {
-      broken?.(new Error("disconnected"));
     },
   };
   return stub as typeof stub & Callbacks & SubscriberStub;
@@ -93,7 +85,7 @@ describe("SubscriberRegistry", () => {
     expect(bob.disposed).toBe(1);
   });
 
-  it("drops a subscriber whose connection broke, once, and announces it", async () => {
+  it("drops a subscriber whose owner releases it, once, and announces it", async () => {
     const registry = new SubscriberRegistry<Callbacks, Who>(hooks);
     const ada = fakeStub();
     const bob = fakeStub();
@@ -102,8 +94,8 @@ describe("SubscriberRegistry", () => {
     await settle();
     ada.received.length = 0;
 
-    bob.break();
-    bob.break();
+    registry.remove(bob);
+    registry.remove(bob);
     await settle();
     expect(registry.size).toBe(1);
     expect(bob.disposed).toBe(1);
@@ -153,8 +145,8 @@ describe("SubscriberRegistry", () => {
     expect(failing.disposed).toBe(1);
     expect(ada.received).toEqual([{ type: "leave", clientId: "zed" }]);
 
-    // Its connection breaking afterwards has nothing left to drop or announce.
-    failing.break();
+    // Its owner releasing it afterwards has nothing left to drop or announce.
+    registry.remove(failing);
     await settle();
     expect(failing.disposed).toBe(1);
     expect(ada.received).toEqual([{ type: "leave", clientId: "zed" }]);
